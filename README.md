@@ -14,6 +14,7 @@ A ideia nasceu de criar um espaço mágico onde as crianças possam **ler, explo
   <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/>
   <img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white"/>
   <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white"/>
+  <img src="https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=apple&logoColor=white"/>
   <img src="https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white"/>
 </p>
 
@@ -26,6 +27,7 @@ um aplicativo alegre, colorido e fácil de usar que coloca a criança no centro 
 
 - **Login divertido** com botões sociais e design lúdico  
 - **Interface limpa** e adaptada para telas grandes como o Galaxy S20 Ultra  
+- **Disponível para Android e iOS**, garantindo acesso a todos  
 - **Planos premium** para acessar histórias exclusivas  
 - **Criação de perfis** para que cada criança tenha seu próprio espaço personalizado  
 
@@ -43,10 +45,11 @@ O **login**, por exemplo, já transmite esse clima com cores suaves e a logo rep
 
 - [x] Estrutura inicial do projeto em Flutter  
 - [x] Tela de Login desenvolvida e estilizada  
-- [x] Integração de logo personalizada  
+- [x] Integração da logo personalizada  
 - [ ] Implementação do cadastro de usuário  
 - [ ] Área Premium de Histórias  
-- [ ] Publicação nas lojas (Google Play e App Store)  
+- [ ] Publicação no **Google Play**  
+- [ ] Publicação na **App Store**  
 
 ---
 
