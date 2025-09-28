@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Cores do app - alegres e infantis
-  static const primary = Color(0xFFFF7B7B);     // Coral suave
-  static const secondary = Color(0xFF6EC3FF);   // Azul claro
-  static const accent = Color(0xFFFFD66E);      // Amarelo
-  static const bgColor = Color(0xFFFFF9F2);     // Creme
-  static const textColor = Color(0xFF333333);   // Cinza escuro
-  static const success = Color(0xFF4CAF50);     // Verde
-  static const error = Color(0xFFE57373);       // Vermelho suave
+  static const primary = Color(0xFFFF7B7B);     
+  static const secondary = Color(0xFF6EC3FF);   
+  static const accent = Color(0xFFFFD66E);      
+  static const bgColor = Color(0xFFFFF9F2);     
+  static const textColor = Color(0xFF333333);   
+  static const success = Color(0xFF4CAF50);     
+  static const error = Color(0xFFE57373);       
 
   static ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: bgColor,
@@ -21,8 +20,7 @@ class AppTheme {
       surface: Colors.white,
       error: error,
     ),
-    
-    // Tipografia arredondada e amigável
+
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
         color: textColor,
@@ -53,8 +51,7 @@ class AppTheme {
         fontSize: 14,
       ),
     ),
-    
-    // Botões arredondados
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primary,
@@ -70,7 +67,6 @@ class AppTheme {
       ),
     ),
     
-    // Campos de texto arredondados
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: const Color(0xFFF8F8F8),
