@@ -29,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Ilustrações leves no fundo
             Positioned(
               top: -40,
               left: -20,
@@ -46,14 +45,12 @@ class _LoginPageState extends State<LoginPage> {
               child: _softCircle(180, colorScheme.primary.withOpacity(0.12)),
             ),
 
-            // Conteúdo
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Logo / Mascote
                     CircleAvatar(
                       radius: 36,
                       backgroundColor: Colors.white,
@@ -77,7 +74,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Container do Login
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(18),
@@ -103,7 +99,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 12),
 
-                          // Email
                           TextField(
                             controller: _emailCtrl,
                             keyboardType: TextInputType.emailAddress,
@@ -111,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                               labelText: 'Email',
                               suffixIcon: TextButton(
                                 onPressed: () {
-                                  // TODO: recuperação de email
+
                                 },
                                 child: const Text('Esqueci meu email'),
                               ),
@@ -119,7 +114,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 12),
 
-                          // Senha
                           TextField(
                             controller: _passwordCtrl,
                             obscureText: _obscure,
@@ -139,7 +133,6 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      // TODO: recuperar senha
                                     },
                                     child: const Text('Esqueci minha senha'),
                                   ),
@@ -150,13 +143,11 @@ class _LoginPageState extends State<LoginPage> {
 
                           const SizedBox(height: 16),
 
-                          // Botão Entrar
                           SizedBox(
                             width: double.infinity,
                             height: 52,
                             child: ElevatedButton(
                               onPressed: () {
-                                // TODO: validar e autenticar
                                 Navigator.pushReplacementNamed(context, AppRoutes.home);
                               },
                               child: const Text('Entrar'),
@@ -165,7 +156,6 @@ class _LoginPageState extends State<LoginPage> {
 
                           const SizedBox(height: 12),
 
-                          // Separador
                           Row(
                             children: [
                               Expanded(child: Divider(color: Colors.grey[300])),
@@ -179,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
 
                           const SizedBox(height: 12),
 
-                          // Social Logins
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -189,7 +179,6 @@ class _LoginPageState extends State<LoginPage> {
                                 border: Colors.grey[300]!,
                                 child: const Icon(Icons.g_mobiledata, size: 28),
                                 onTap: () {
-                                  // TODO: Google Sign-In
                                 },
                               ),
                               const SizedBox(width: 12),
@@ -198,7 +187,6 @@ class _LoginPageState extends State<LoginPage> {
                                 background: const Color(0xFF1877F2),
                                 child: const Icon(Icons.facebook, color: Colors.white),
                                 onTap: () {
-                                  // TODO: Facebook Login
                                 },
                               ),
                               const SizedBox(width: 12),
@@ -207,7 +195,6 @@ class _LoginPageState extends State<LoginPage> {
                                 background: Colors.black,
                                 child: const Icon(Icons.apple, color: Colors.white),
                                 onTap: () {
-                                  // TODO: Apple Sign-In
                                 },
                               ),
                             ],
@@ -215,14 +202,12 @@ class _LoginPageState extends State<LoginPage> {
 
                           const SizedBox(height: 12),
 
-                          // Criar Conta
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text('Ainda não tem conta?', style: TextStyle(color: Colors.grey[700])),
                               TextButton(
                                 onPressed: () {
-                                  // TODO: navegar para cadastro
                                 },
                                 child: const Text('Criar Conta'),
                               ),
