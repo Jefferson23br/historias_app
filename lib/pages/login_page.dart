@@ -9,14 +9,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailCtrl = TextEditingController();
-  final _passwordCtrl = TextEditingController();
-  bool _obscure = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isObscure = true;
 
   @override
   void dispose() {
-    _emailCtrl.dispose();
-    _passwordCtrl.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -44,36 +44,34 @@ class _LoginPageState extends State<LoginPage> {
               left: -30,
               child: _softCircle(180, colorScheme.primary.withOpacity(0.12)),
             ),
-
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircleAvatar(
-                      radius: 36,
-                      backgroundColor: Colors.white,
-                      child: Text(
-                        '📖',
-                        style: theme.textTheme.headlineMedium?.copyWith(fontSize: 36),
-                      ),
+                    Image.asset(
+                      "assets/images/logo.png",
+                      height: 120,
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Aplicativo de Histórias',
-                      style: theme.textTheme.titleLarge,
+                      'Mundo de Histórias',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       'Crie sua conta e veja a magia acontecer',
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.textTheme.bodyMedium?.color?.withOpacity(0.8),
+                        color: Colors.blueAccent.shade200,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 20),
-
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(18),
@@ -90,33 +88,31 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: Column(
                         children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
+                          Center(
                             child: Text(
                               'Entrar',
-                              style: theme.textTheme.titleMedium,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 12),
-
                           TextField(
-                            controller: _emailCtrl,
+                            controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                               labelText: 'Email',
                               suffixIcon: TextButton(
-                                onPressed: () {
-
-                                },
+                                onPressed: () {},
                                 child: const Text('Esqueci meu email'),
                               ),
                             ),
                           ),
                           const SizedBox(height: 12),
-
                           TextField(
-                            controller: _passwordCtrl,
-                            obscureText: _obscure,
+                            controller: _passwordController,
+                            obscureText: _isObscure,
                             decoration: InputDecoration(
                               labelText: 'Senha',
                               suffixIcon: Row(
@@ -124,25 +120,22 @@ class _LoginPageState extends State<LoginPage> {
                                 children: [
                                   IconButton(
                                     icon: Icon(
-                                      _obscure ? Icons.visibility_off : Icons.visibility,
+                                      _isObscure ? Icons.visibility_off : Icons.visibility,
                                       color: Colors.grey[600],
                                     ),
                                     onPressed: () {
-                                      setState(() => _obscure = !_obscure);
+                                      setState(() => _isObscure = !_isObscure);
                                     },
                                   ),
                                   TextButton(
-                                    onPressed: () {
-                                    },
+                                    onPressed: () {},
                                     child: const Text('Esqueci minha senha'),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 16),
-
                           SizedBox(
                             width: double.infinity,
                             height: 52,
@@ -153,9 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: const Text('Entrar'),
                             ),
                           ),
-
                           const SizedBox(height: 12),
-
                           Row(
                             children: [
                               Expanded(child: Divider(color: Colors.grey[300])),
@@ -166,10 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                               Expanded(child: Divider(color: Colors.grey[300])),
                             ],
                           ),
-
                           const SizedBox(height: 12),
-
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -178,37 +166,31 @@ class _LoginPageState extends State<LoginPage> {
                                 background: Colors.white,
                                 border: Colors.grey[300]!,
                                 child: const Icon(Icons.g_mobiledata, size: 28),
-                                onTap: () {
-                                },
+                                onTap: () {},
                               ),
                               const SizedBox(width: 12),
                               _SocialIconButton(
                                 tooltip: 'Entrar com Facebook',
                                 background: const Color(0xFF1877F2),
                                 child: const Icon(Icons.facebook, color: Colors.white),
-                                onTap: () {
-                                },
+                                onTap: () {},
                               ),
                               const SizedBox(width: 12),
                               _SocialIconButton(
                                 tooltip: 'Entrar com Apple',
                                 background: Colors.black,
                                 child: const Icon(Icons.apple, color: Colors.white),
-                                onTap: () {
-                                },
+                                onTap: () {},
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 12),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text('Ainda não tem conta?', style: TextStyle(color: Colors.grey[700])),
                               TextButton(
-                                onPressed: () {
-                                },
+                                onPressed: () {},
                                 child: const Text('Criar Conta'),
                               ),
                             ],
