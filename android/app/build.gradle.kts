@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.historias_app"
+    namespace = "com.jefferson.livrodehistorias"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.historias_app"
+        applicationId = "com.jefferson.livrodehistorias" // 👈 bate com Firebase
         minSdk = 21
         targetSdk = 34
         versionCode = 1
@@ -41,7 +41,10 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
 
+    // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+
+    // Firebase SDKs
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
