@@ -43,7 +43,7 @@ O **login**, por exemplo, já transmite esse clima com cores suaves e a logo rep
 
 ## 📌 Status do Projeto  
 
-- [x] Estrutura inicial do projeto em FlutTer  
+- [x] Estrutura inicial do projeto em Flutter  
 - [x] Tela de Login desenvolvida e estilizada  
 - [x] Integração da logo personalizada  
 - [ ] Implementação do cadastro de usuário  
