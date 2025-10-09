@@ -22,13 +22,10 @@ class _ForgotEmailPageState extends State<ForgotEmailPage> {
   }
 
   void _toResetPassword() {
-    // Leva o usuário para a recuperação de senha
     Navigator.pushReplacementNamed(context, AppRoutes.resetPassword);
   }
 
   Future<void> _sendSupport() async {
-    // Aqui você poderia integrar com Firestore, Functions, ou enviar email
-    // Por enquanto só simulamos feedback visual.
     setState(() => _sending = true);
     await Future.delayed(const Duration(seconds: 1));
     if (!mounted) return;
@@ -36,7 +33,7 @@ class _ForgotEmailPageState extends State<ForgotEmailPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Sua solicitação foi enviada. Entraremos em contato.')),
     );
-    Navigator.pop(context); // volta para o login
+    Navigator.pop(context); 
   }
 
   @override
