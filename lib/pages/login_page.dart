@@ -72,7 +72,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Container(
+                    Container
+                    (
                       width: double.infinity,
                       padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
@@ -98,43 +99,113 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          TextField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              suffixIcon: TextButton(
-                                onPressed: () {},
-                                child: const Text('Esqueci meu email'),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          TextField(
-                            controller: _passwordController,
-                            obscureText: _isObscure,
-                            decoration: InputDecoration(
-                              labelText: 'Senha',
-                              suffixIcon: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      _isObscure ? Icons.visibility_off : Icons.visibility,
-                                      color: Colors.grey[600],
-                                    ),
-                                    onPressed: () {
-                                      setState(() => _isObscure = !_isObscure);
-                                    },
-                                  ),
-                                  TextButton(
-                                    onPressed: () {},
-                                    child: const Text('Esqueci minha senha'),
-                                  ),
+
+                          // EMAIL (link ativo enquanto o campo estiver vazio)
+                          ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: _emailController,
+                            builder: (context, value, _) {
+                              final bool canTapForgotEmail = value.text.isEmpty;
+
+                              final linkStyleEnabled = TextStyle(
+                                color: Colors.blue.shade600,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                                shadows: const [
+                                  Shadow(offset: Offset(0, 1), blurRadius: 2, color: Colors.black26),
                                 ],
-                              ),
-                            ),
+                              );
+
+                              final linkStyleDisabled = TextStyle(
+                                color: Colors.grey.shade400,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.none,
+                              );
+
+                              return TextField(
+                                controller: _emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  labelText: 'Email',
+                                  suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                                  suffixIcon: Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: IgnorePointer(
+                                      ignoring: !canTapForgotEmail,
+                                      child: GestureDetector(
+                                        onTap: canTapForgotEmail ? _onForgotEmail : null,
+                                        child: Text(
+                                          'Esqueci meu email',
+                                          style: canTapForgotEmail ? linkStyleEnabled : linkStyleDisabled,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
+
+                          const SizedBox(height: 12),
+
+                          // SENHA (link ativo enquanto o campo estiver vazio)
+                          ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: _passwordController,
+                            builder: (context, value, _) {
+                              final bool canTapForgotPassword = value.text.isEmpty;
+
+                              final linkStyleEnabled = TextStyle(
+                                color: Colors.blue.shade600,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                                shadows: const [
+                                  Shadow(offset: Offset(0, 1), blurRadius: 2, color: Colors.black26),
+                                ],
+                              );
+
+                              final linkStyleDisabled = TextStyle(
+                                color: Colors.grey.shade400,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.none,
+                              );
+
+                              return TextField(
+                                controller: _passwordController,
+                                obscureText: _isObscure,
+                                decoration: InputDecoration(
+                                  labelText: 'Senha',
+                                  suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(
+                                          _isObscure ? Icons.visibility_off : Icons.visibility,
+                                          color: Colors.grey[600],
+                                        ),
+                                        onPressed: () {
+                                          setState(() => _isObscure = !_isObscure);
+                                        },
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 8),
+                                        child: IgnorePointer(
+                                          ignoring: !canTapForgotPassword,
+                                          child: GestureDetector(
+                                            onTap: canTapForgotPassword ? _onForgotPassword : null,
+                                            child: Text(
+                                              'Esqueci minha senha',
+                                              style: canTapForgotPassword ? linkStyleEnabled : linkStyleDisabled,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+
                           const SizedBox(height: 16),
                           SizedBox(
                             width: double.infinity,
@@ -206,6 +277,18 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void _onForgotEmail() {
+    // TODO: ação para "Esqueci meu email"
+    // Ex.: abrir uma tela/diálogo de ajuda.
+  }
+
+  void _onForgotPassword() {
+    // TODO: ação para "Esqueci minha senha"
+    // Ex.: se usar FirebaseAuth:
+    // final email = _emailController.text.trim();
+    // if (email.isNotEmpty) FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
   Widget _softCircle(double size, Color color) {
