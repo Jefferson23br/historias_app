@@ -213,6 +213,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onForgotEmail() {
+    Navigator.pushNamed(context, AppRoutes.forgotEmail);
   }
 
   void _onForgotPassword() {
