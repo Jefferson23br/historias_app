@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
 
                           _GhostPlaceholderTextField(
                             controller: _passwordController,
-                            labelText: 'Senha',
+                            labelText: '',
                             ghostText: 'Esqueci minha senha',
                             onGhostTap: _onForgotPassword,
                             obscureText: _isObscure,
