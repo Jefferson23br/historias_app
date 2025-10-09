@@ -100,7 +100,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 12),
 
-                          // EMAIL (link ativo enquanto o campo estiver vazio)
                           ValueListenableBuilder<TextEditingValue>(
                             valueListenable: _emailController,
                             builder: (context, value, _) {
@@ -146,8 +145,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
 
                           const SizedBox(height: 12),
-
-                          // SENHA (link ativo enquanto o campo estiver vazio)
                           ValueListenableBuilder<TextEditingValue>(
                             valueListenable: _passwordController,
                             builder: (context, value, _) {
@@ -280,15 +277,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onForgotEmail() {
-    // TODO: ação para "Esqueci meu email"
-    // Ex.: abrir uma tela/diálogo de ajuda.
+
   }
 
   void _onForgotPassword() {
-    // TODO: ação para "Esqueci minha senha"
-    // Ex.: se usar FirebaseAuth:
-    // final email = _emailController.text.trim();
-    // if (email.isNotEmpty) FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
   }
 
   Widget _softCircle(double size, Color color) {
