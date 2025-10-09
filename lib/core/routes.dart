@@ -5,6 +5,7 @@ import '../pages/home_page.dart';
 import '../pages/story_page.dart';
 import '../pages/premium_page.dart';
 import '../pages/reset_password_page.dart';
+import '../pages/forgot_email_page.dart';
 
 class AppRoutes {
   static const String login = '/';
@@ -12,6 +13,7 @@ class AppRoutes {
   static const String story = '/story';
   static const String premium = '/premium';
   static const String resetPassword = '/reset-password';
+  static const String forgotEmail = '/forgot-email';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -28,14 +30,11 @@ class AppRoutes {
         );
 
       case story:
-        final args = settings.arguments;
-        String storyId = '';
-        if (args is Map) {
-          final dynamic id = args['storyId'];
-          if (id is String) storyId = id;
-        }
+        final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
-          builder: (_) => StoryPage(storyId: storyId),
+          builder: (_) => StoryPage(
+            storyId: args?['storyId'] ?? '',
+          ),
           settings: settings,
         );
 
@@ -48,7 +47,13 @@ class AppRoutes {
       case resetPassword:
         return MaterialPageRoute(
           builder: (_) => const ResetPasswordPage(),
-          settings: settings, 
+          settings: settings,
+        );
+
+      case forgotEmail:
+        return MaterialPageRoute(
+          builder: (_) => const ForgotEmailPage(),
+          settings: settings,
         );
 
       default:
