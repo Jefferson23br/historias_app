@@ -16,7 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    // Rebuild para esconder/mostrar os placeholders fantasma
     _emailController.addListener(_onControllersChanged);
     _passwordController.addListener(_onControllersChanged);
   }
@@ -31,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onControllersChanged() {
-    // Garante rebuild ao digitar/apagar
     if (mounted) setState(() {});
   }
 
@@ -114,7 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 12),
 
-                          // Campo de EMAIL com placeholder fantasma clicável
                           _GhostPlaceholderTextField(
                             controller: _emailController,
                             labelText: 'Email',
@@ -125,7 +122,6 @@ class _LoginPageState extends State<LoginPage> {
 
                           const SizedBox(height: 12),
 
-                          // Campo de SENHA com placeholder fantasma clicável e ícone de visibilidade
                           _GhostPlaceholderTextField(
                             controller: _passwordController,
                             labelText: 'Senha',
@@ -217,15 +213,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onForgotEmail() {
-    // TODO: ação para "Esqueci meu email"
-    // Ex.: abrir uma tela/diálogo de ajuda.
   }
 
   void _onForgotPassword() {
-    // TODO: ação para "Esqueci minha senha"
-    // Ex.: se usar FirebaseAuth:
-    // final email = _emailController.text.trim();
-    // if (email.isNotEmpty) FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
   Widget _softCircle(double size, Color color) {
@@ -237,10 +227,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-/// TextField com "ghost placeholder" clicável que só aparece quando o campo está vazio.
-/// - Não ocupa espaço do layout (fica sobreposto).
-/// - Some ao digitar.
-/// - Funciona como link apenas quando vazio.
 class _GhostPlaceholderTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
@@ -265,7 +251,6 @@ class _GhostPlaceholderTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Estilo fantasma (placeholder-link)
     final ghostStyle = theme.textTheme.bodyMedium?.copyWith(
       color: Colors.grey.withOpacity(0.6),
       fontWeight: FontWeight.w500,
@@ -275,7 +260,6 @@ class _GhostPlaceholderTextField extends StatelessWidget {
       ],
     );
 
-    // Usamos Stack para sobrepor o placeholder fantasma dentro da área do TextField
     return Stack(
       alignment: Alignment.centerLeft,
       children: [
@@ -285,7 +269,6 @@ class _GhostPlaceholderTextField extends StatelessWidget {
           obscureText: obscureText,
           decoration: InputDecoration(
             labelText: labelText,
-            // Mantenha espaço para trailing (ícone de olho na senha, por exemplo)
             suffixIcon: trailing == null
                 ? null
                 : Padding(
@@ -295,17 +278,12 @@ class _GhostPlaceholderTextField extends StatelessWidget {
           ),
         ),
 
-        // Ghost placeholder clicável (visível só quando vazio)
         if (controller.text.isEmpty)
-          // Preenche a área do campo para permitir clique em qualquer parte do texto
           Positioned.fill(
             child: IgnorePointer(
-              // Permitimos clique apenas quando vazio (estamos dentro do if vazio)
               ignoring: false,
               child: Padding(
-                // Ajuste fino para posicionar o texto dentro da área útil do input
                 padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(
-                  // Deixe espaço do lado direito se houver trailing
                   right: trailing == null ? 12 : 48,
                 ),
                 child: Align(
