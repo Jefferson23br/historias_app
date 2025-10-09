@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
 
                           _GhostPlaceholderTextField(
                             controller: _emailController,
-                            labelText: 'Email',
+                            labelText: '',
                             ghostText: 'Esqueci meu email',
                             onGhostTap: _onForgotEmail,
                             keyboardType: TextInputType.emailAddress,
@@ -216,6 +216,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onForgotPassword() {
+  Navigator.pushNamed(context, '/reset-password', arguments: {
+    'prefillEmail': _emailController.text.trim(),
+  });
   }
 
   Widget _softCircle(double size, Color color) {
