@@ -7,7 +7,6 @@ import '../pages/premium_page.dart';
 import '../pages/reset_password_page.dart';
 
 class AppRoutes {
-  // Rotas nomeadas
   static const String login = '/';
   static const String home = '/home';
   static const String story = '/story';
@@ -29,7 +28,6 @@ class AppRoutes {
         );
 
       case story:
-        // Aceita argumentos opcionais: { "storyId": String }
         final args = settings.arguments;
         String storyId = '';
         if (args is Map) {
@@ -48,10 +46,9 @@ class AppRoutes {
         );
 
       case resetPassword:
-        // Aceita argumentos opcionais: { "prefillEmail": String }
         return MaterialPageRoute(
           builder: (_) => const ResetPasswordPage(),
-          settings: settings, // mantém os arguments para leitura na página
+          settings: settings, 
         );
 
       default:
