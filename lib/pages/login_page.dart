@@ -14,10 +14,25 @@ class _LoginPageState extends State<LoginPage> {
   bool _isObscure = true;
 
   @override
+  void initState() {
+    super.initState();
+    // Rebuild para esconder/mostrar os placeholders fantasma
+    _emailController.addListener(_onControllersChanged);
+    _passwordController.addListener(_onControllersChanged);
+  }
+
+  @override
   void dispose() {
+    _emailController.removeListener(_onControllersChanged);
+    _passwordController.removeListener(_onControllersChanged);
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _onControllersChanged() {
+    // Garante rebuild ao digitar/apagar
+    if (mounted) setState(() {});
   }
 
   @override
@@ -72,8 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Container
-                    (
+                    Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
@@ -100,107 +114,33 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 12),
 
-                          ValueListenableBuilder<TextEditingValue>(
-                            valueListenable: _emailController,
-                            builder: (context, value, _) {
-                              final bool canTapForgotEmail = value.text.isEmpty;
-
-                              final linkStyleEnabled = TextStyle(
-                                color: Colors.blue.shade600,
-                                fontWeight: FontWeight.w600,
-                                decoration: TextDecoration.underline,
-                                shadows: const [
-                                  Shadow(offset: Offset(0, 1), blurRadius: 2, color: Colors.black26),
-                                ],
-                              );
-
-                              final linkStyleDisabled = TextStyle(
-                                color: Colors.grey.shade400,
-                                fontWeight: FontWeight.w500,
-                                decoration: TextDecoration.none,
-                              );
-
-                              return TextField(
-                                controller: _emailController,
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
-                                  labelText: 'Email',
-                                  suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-                                  suffixIcon: Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: IgnorePointer(
-                                      ignoring: !canTapForgotEmail,
-                                      child: GestureDetector(
-                                        onTap: canTapForgotEmail ? _onForgotEmail : null,
-                                        child: Text(
-                                          'Esqueci meu email',
-                                          style: canTapForgotEmail ? linkStyleEnabled : linkStyleDisabled,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                          // Campo de EMAIL com placeholder fantasma clicável
+                          _GhostPlaceholderTextField(
+                            controller: _emailController,
+                            labelText: 'Email',
+                            ghostText: 'Esqueci meu email',
+                            onGhostTap: _onForgotEmail,
+                            keyboardType: TextInputType.emailAddress,
                           ),
 
                           const SizedBox(height: 12),
-                          ValueListenableBuilder<TextEditingValue>(
-                            valueListenable: _passwordController,
-                            builder: (context, value, _) {
-                              final bool canTapForgotPassword = value.text.isEmpty;
 
-                              final linkStyleEnabled = TextStyle(
-                                color: Colors.blue.shade600,
-                                fontWeight: FontWeight.w600,
-                                decoration: TextDecoration.underline,
-                                shadows: const [
-                                  Shadow(offset: Offset(0, 1), blurRadius: 2, color: Colors.black26),
-                                ],
-                              );
-
-                              final linkStyleDisabled = TextStyle(
-                                color: Colors.grey.shade400,
-                                fontWeight: FontWeight.w500,
-                                decoration: TextDecoration.none,
-                              );
-
-                              return TextField(
-                                controller: _passwordController,
-                                obscureText: _isObscure,
-                                decoration: InputDecoration(
-                                  labelText: 'Senha',
-                                  suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-                                  suffixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(
-                                          _isObscure ? Icons.visibility_off : Icons.visibility,
-                                          color: Colors.grey[600],
-                                        ),
-                                        onPressed: () {
-                                          setState(() => _isObscure = !_isObscure);
-                                        },
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 8),
-                                        child: IgnorePointer(
-                                          ignoring: !canTapForgotPassword,
-                                          child: GestureDetector(
-                                            onTap: canTapForgotPassword ? _onForgotPassword : null,
-                                            child: Text(
-                                              'Esqueci minha senha',
-                                              style: canTapForgotPassword ? linkStyleEnabled : linkStyleDisabled,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                          // Campo de SENHA com placeholder fantasma clicável e ícone de visibilidade
+                          _GhostPlaceholderTextField(
+                            controller: _passwordController,
+                            labelText: 'Senha',
+                            ghostText: 'Esqueci minha senha',
+                            onGhostTap: _onForgotPassword,
+                            obscureText: _isObscure,
+                            keyboardType: TextInputType.text,
+                            trailing: IconButton(
+                              tooltip: _isObscure ? 'Mostrar senha' : 'Ocultar senha',
+                              icon: Icon(
+                                _isObscure ? Icons.visibility_off : Icons.visibility,
+                                color: Colors.grey[600],
+                              ),
+                              onPressed: () => setState(() => _isObscure = !_isObscure),
+                            ),
                           ),
 
                           const SizedBox(height: 16),
@@ -277,11 +217,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onForgotEmail() {
-
+    // TODO: ação para "Esqueci meu email"
+    // Ex.: abrir uma tela/diálogo de ajuda.
   }
 
   void _onForgotPassword() {
-
+    // TODO: ação para "Esqueci minha senha"
+    // Ex.: se usar FirebaseAuth:
+    // final email = _emailController.text.trim();
+    // if (email.isNotEmpty) FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
   Widget _softCircle(double size, Color color) {
@@ -289,6 +233,96 @@ class _LoginPageState extends State<LoginPage> {
       width: size,
       height: size,
       decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    );
+  }
+}
+
+/// TextField com "ghost placeholder" clicável que só aparece quando o campo está vazio.
+/// - Não ocupa espaço do layout (fica sobreposto).
+/// - Some ao digitar.
+/// - Funciona como link apenas quando vazio.
+class _GhostPlaceholderTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String labelText;
+  final String ghostText;
+  final VoidCallback onGhostTap;
+  final bool obscureText;
+  final TextInputType keyboardType;
+  final Widget? trailing;
+
+  const _GhostPlaceholderTextField({
+    super.key,
+    required this.controller,
+    required this.labelText,
+    required this.ghostText,
+    required this.onGhostTap,
+    this.obscureText = false,
+    this.keyboardType = TextInputType.text,
+    this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    // Estilo fantasma (placeholder-link)
+    final ghostStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: Colors.grey.withOpacity(0.6),
+      fontWeight: FontWeight.w500,
+      decoration: TextDecoration.none,
+      shadows: const [
+        Shadow(offset: Offset(0, 1), blurRadius: 1.5, color: Color(0x1A000000)),
+      ],
+    );
+
+    // Usamos Stack para sobrepor o placeholder fantasma dentro da área do TextField
+    return Stack(
+      alignment: Alignment.centerLeft,
+      children: [
+        TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            labelText: labelText,
+            // Mantenha espaço para trailing (ícone de olho na senha, por exemplo)
+            suffixIcon: trailing == null
+                ? null
+                : Padding(
+                    padding: const EdgeInsets.only(right: 2),
+                    child: trailing,
+                  ),
+          ),
+        ),
+
+        // Ghost placeholder clicável (visível só quando vazio)
+        if (controller.text.isEmpty)
+          // Preenche a área do campo para permitir clique em qualquer parte do texto
+          Positioned.fill(
+            child: IgnorePointer(
+              // Permitimos clique apenas quando vazio (estamos dentro do if vazio)
+              ignoring: false,
+              child: Padding(
+                // Ajuste fino para posicionar o texto dentro da área útil do input
+                padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(
+                  // Deixe espaço do lado direito se houver trailing
+                  right: trailing == null ? 12 : 48,
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: onGhostTap,
+                    child: Text(
+                      ghostText,
+                      style: ghostStyle,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -315,7 +349,8 @@ class _SocialIconButton extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: onTap,
-        child: Container(
+        child: Container
+        (
           width: 52,
           height: 52,
           decoration: BoxDecoration(
