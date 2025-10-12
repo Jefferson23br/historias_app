@@ -1,0 +1,11 @@
+Próximos passos 
+Confirmar modelos de dados no Firestore:
+books: {title, coverUrl, categoryId, views15d}
+categories: {name}
+users/{uid}: {favorites: {catId: count}}
+bookViews (eventos) ou counters/books/{bookId}/daily/{yyyyMMdd}
+Criar a HomeShell com BottomNavigationBar + IndexedStack.
+Implementar DashboardScreen com as 3 seções.
+Implementar BookRepository e CategoryRepository.
+Cloud Function de agregação 15 dias (posso te passar o boilerplate em Node/TS).
+Telemetria: registrar view ao abrir livro.
