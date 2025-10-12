@@ -21,9 +21,6 @@ class HistoriasApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Mundo de Histórias',
       theme: AppTheme.lightTheme,
-      // Mantemos seu fluxo via rotas nomeadas:
-      // - AppRoutes.login deve apontar para a tela de login
-      // - Após login bem-sucedido, navegue para AppRoutes.home (HomeShell)
       initialRoute: AppRoutes.login,
       onGenerateRoute: AppRoutes.generateRoute,
     );
