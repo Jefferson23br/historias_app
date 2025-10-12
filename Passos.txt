@@ -9,3 +9,120 @@ Implementar DashboardScreen com as 3 seções.
 Implementar BookRepository e CategoryRepository.
 Cloud Function de agregação 15 dias (posso te passar o boilerplate em Node/TS).
 Telemetria: registrar view ao abrir livro.
+
+4) Criar livros no Firestore com coverUrl
+Coleção: books
+Para cada livro:
+Gere um id (pode ser automático; se for automático, baixe o id e use no nome do arquivo de capa no Storage da próxima vez).
+Campos:
+title: string
+coverUrl: string (URL pública da imagem na pasta covers/)
+categoryId: string (deve bater com o id de uma categoria existente, ex.: “aventura”)
+views15d: number (inicialmente 0)
+Exemplo:
+{
+title: "A Floresta Encantada",
+coverUrl: "https://firebasestorage.googleapis.com/v0/b/SEU_BUCKET/o/covers%2Fabc123.webp?alt=media",
+categoryId: "aventura",
+views15d: 0
+}
+
+Como pegar a URL pública:
+
+No Storage, clique no arquivo em covers/, abra os detalhes e copie o “URL de download” (getDownloadURL). Ele será parecido com o exemplo acima.
+Crie 5–10 livros de teste com categorias variadas.
+
+5) Confirmar regras do Firestore (mínimas)
+No Console > Firestore Database > Regras, use algo nessa linha (ajuste se já tiver regras):
+
+rules_version = '2';
+service cloud.firestore {
+match /databases/{database}/documents {
+
+function isAuthed() { return request.auth != null; }
+
+// Livros: leitura pública (ou restrita se preferir), escrita bloqueada no app
+match /books/{bookId} {
+  allow read: if true;     // ou isAuthed()
+  allow write: if false;   // escrita por admin/Cloud Functions
+}
+
+// Categorias: leitura pública
+match /categories/{categoryId} {
+  allow read: if true;
+  allow write: if false;
+}
+
+// Perfil do usuário: somente o próprio usuário
+match /users/{uid} {
+  allow read, update: if isAuthed() && request.auth.uid == uid;
+  allow create: if isAuthed() && request.auth.uid == uid;
+  allow delete: if false;
+}
+
+// Se for usar contadores/eventos depois, adicionamos aqui os matches.
+}
+}
+
+6) Consultas no app (para alimentar a Dashboard)
+Top 10 (últimos 15 dias, já que você vai manter views15d via função agendada depois):
+books.orderBy('views15d', descending: true).limit(10)
+Recomendações:
+Leia users/{uid}.favorites, pegue a category mais frequente
+books.where('categoryId', isEqualTo: favCat).orderBy('views15d', descending: true).limit(20)
+Categorias:
+categories.orderBy('name')
+No repositório Dart (exemplo):
+
+final db = FirebaseFirestore.instance;
+
+Stream<List> top10Stream() => db.collection('books')
+.orderBy('views15d', descending: true)
+.limit(10)
+.snapshots()
+.map((s) => s.docs.map((d) => Book.fromMap(d.id, d.data())).toList());
+
+Stream<List> categoriesStream() => db.collection('categories')
+.orderBy('name')
+.snapshots()
+.map((s) => s.docs.map((d) => Category.fromMap(d.id, d.data())).toList());
+
+Para recomendações com base na categoria favorita, combine o stream do user com a consulta de books (como já te mostrei antes).
+
+7) Exibir as capas na Dashboard
+No card do livro (BookCard), use Image.network(book.coverUrl). Se quiser placeholders/cache melhor, use cached_network_image:
+
+cached_network_image (pubspec.yaml):
+
+dependencies:
+cached_network_image: ^3.3.1
+Exemplo:
+CachedNetworkImage(
+imageUrl: book.coverUrl,
+fit: BoxFit.cover,
+placeholder: (, __) => Container(color: Colors.grey.shade300),
+errorWidget: (, __, ___) => Container(color: Colors.grey.shade300),
+)
+
+8) Registrar visualizações e preparar a métrica para Top 10
+Mesmo com o Storage pronto, para o Top 10 você vai precisar atualizar views15d. Você tem duas opções:
+
+Agora: para testes, edite manualmente o campo views15d em alguns livros para validar a UI.
+Em seguida: implementar contadores diários + Cloud Function agendada (posso te entregar o boilerplate quando você disser “vamos implementar agora”).
+Ao abrir um livro:
+
+Atualize favorites do usuário: users/{uid}.favorites.{categoryId} += 1
+Opcional: incremente contador diário do livro (para futura agregação de 15 dias)
+9) Checklist rápido
+ Regras do Storage aplicadas
+ 2–3 capas enviadas para covers/
+ Coleção categories com 2–3 docs
+ Coleção books com 5–10 docs com coverUrl válidas e categoryId existente
+ App: Listas horizontais mostram as capas e títulos
+ views15d populado (manualmente por enquanto) para testar Top 10
+10) Próximos passos (me diga e eu já te entrego)
+Quer que eu gere:
+Um arquivo de regras do Storage/Firestore pronto para copiar e colar?
+Um script Node (CLI) que sobe uma pasta local ./assets/covers para covers/ e cria/atualiza os docs em books automaticamente?
+O boilerplate da Cloud Function que agrega os últimos 15 dias e atualiza books.views15d diariamente?
+Se preferir, também crio o código Dart do repositório e widgets exatos seguindo os nomes das suas pastas/arquivos atuais (me diga como está lib/).
