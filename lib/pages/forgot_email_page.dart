@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/routes.dart';s
+import '../core/routes.dart';
 
 class ForgotEmailPage extends StatefulWidget {
   const ForgotEmailPage({super.key});
