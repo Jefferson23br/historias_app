@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../pages/login_page.dart';
-import '../pages/home_page.dart';
+import '../app_shell/home_shell.dart';
 import '../pages/story_page.dart';
 import '../pages/premium_page.dart';
 import '../pages/reset_password_page.dart';
 import '../pages/forgot_email_page.dart';
 
-
-
 class AppRoutes {
-
-  static const String login = '/';            
-  static const String home = '/home';         
-  static const String story = '/story';       
-  static const String premium = '/premium';   
+  static const String login = '/';
+  static const String home = '/home';
+  static const String story = '/story';
+  static const String premium = '/premium';
   static const String resetPassword = '/reset-password';
   static const String forgotEmail = '/forgot-email';
 
@@ -28,14 +25,11 @@ class AppRoutes {
 
       case home:
         return MaterialPageRoute(
-          builder: (_) => const HomePage(),
+          builder: (_) => const HomeShell(), 
           settings: settings,
         );
 
-
-
       case story:
-
         final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
           builder: (_) => StoryPage(
