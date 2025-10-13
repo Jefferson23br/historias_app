@@ -10,12 +10,11 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Prints de verificação do Firebase em runtime
+
   try {
     final opts = DefaultFirebaseOptions.currentPlatform;
     print('Firebase projectId: ${opts.projectId}');
     print('Firebase appId: ${opts.appId}');
-    // Evita mostrar a chave inteira no log
     final apiKeyTail = opts.apiKey.length >= 6
         ? opts.apiKey.substring(opts.apiKey.length - 6)
         : opts.apiKey;
