@@ -87,4 +87,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'livro-historias.firebasestorage.app',
     measurementId: 'G-EFERRY20MG',
   );
+
 }
