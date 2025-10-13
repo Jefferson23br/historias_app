@@ -1,5 +1,23 @@
 import 'package:flutter/material.dart';
 import '../features/dashboard/dashboard_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+Future<void> _testFirestoreOnce() async {
+  final db = FirebaseFirestore.instance;
+  try {
+    final snap = await db
+        .collection('books')
+        .limit(1)
+        .get(const GetOptions(source: Source.server));
+    print('TEST FIRESTORE OK: docs=${snap.docs.length}');
+    for (final d in snap.docs) {
+      print('docId=${d.id} data=${d.data()}');
+    }
+  } catch (e, st) {
+    print('TEST FIRESTORE ERROR: $e');
+    print(st);
+  }
+}
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
