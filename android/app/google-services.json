@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "826670569395-m7onfsllj6g3r8sm5oj4d83aauu5ul4s.apps.googleusercontent.com",
+              "client_id": "826670569395-6fpjj8ak1c8d0ms4cuh8jep2s0l477v1.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.jefferson.livrodehistorias"
+                "bundle_id": "com.example.historiasNova3"
               }
             }
           ]
