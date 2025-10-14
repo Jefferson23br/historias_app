@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'core/theme.dart';
 import 'core/routes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,6 +11,11 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+await FirebaseFirestore.instance.collection('dev_ping').doc('test').set({
+'ok': true,
+'ts': DateTime.now().toIso8601String(),
+});
+Se:
 
   try {
     final opts = DefaultFirebaseOptions.currentPlatform;
