@@ -1,0 +1,17 @@
+{
+  "name": "functions",
+  "scripts": {
+    "lint": "echo \"skip lint\"",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.0"
+  }
+}
