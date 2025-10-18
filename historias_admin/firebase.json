@@ -1,0 +1,41 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "livro-historias",
+          "appId": "1:826670569395:android:efa210be6230d1fba0ddc6",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "livro-historias",
+          "configurations": {
+            "android": "1:826670569395:android:efa210be6230d1fba0ddc6",
+            "ios": "1:826670569395:ios:53b9a1572fee52d5a0ddc6",
+            "macos": "1:826670569395:ios:53b9a1572fee52d5a0ddc6",
+            "web": "1:826670569395:web:8bad2f04c92bf512a0ddc6",
+            "windows": "1:826670569395:web:00b7842ba57e6b42a0ddc6"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}
