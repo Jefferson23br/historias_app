@@ -13,13 +13,14 @@ import '../../widgets/app_background.dart';
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
-  void _openPdf(BuildContext context, String pdfUrl, String title) {
+  void _openPdf(BuildContext context, Book book) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => PdfViewerPage(
-          pdfUrl: pdfUrl,
-          title: title,
+          pdfUrl: book.pdfUrl,
+          title: book.title,
+          pdfUrl2: book.pdfUrl2,
         ),
       ),
     );
@@ -92,7 +93,7 @@ class DashboardScreen extends StatelessWidget {
                             children: [
                               BookCard(
                                 book: book,
-                                onTap: () => _openPdf(context, book.pdfUrl, book.title),
+                                onTap: () => _openPdf(context, book),
                               ),
                               Positioned(
                                 top: 8,
@@ -134,8 +135,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (uid != null)
-                  const SizedBox(height: 12),
+                if (uid != null) const SizedBox(height: 12),
                 if (uid != null)
                   SizedBox(
                     height: 220,
@@ -155,7 +155,7 @@ class DashboardScreen extends StatelessWidget {
                             final book = books[index];
                             return BookCard(
                               book: book,
-                              onTap: () => _openPdf(context, book.pdfUrl, book.title),
+                              onTap: () => _openPdf(context, book),
                             );
                           },
                         );
