@@ -14,13 +14,14 @@ class CategoryBooksPage extends StatelessWidget {
     required this.categoryName,
   });
 
-  void _openPdf(BuildContext context, String pdfUrl, String title) {
+  void _openPdf(BuildContext context, Book book) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => PdfViewerPage(
-          pdfUrl: pdfUrl,
-          title: title,
+          pdfUrl: book.pdfUrl,
+          title: book.title,
+          pdfUrl2: book.pdfUrl2,
         ),
       ),
     );
@@ -93,7 +94,7 @@ class CategoryBooksPage extends StatelessWidget {
                           );
                         }
                         return GestureDetector(
-                          onTap: () => _openPdf(context, book.pdfUrl, book.title),
+                          onTap: () => _openPdf(context, book),
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
