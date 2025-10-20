@@ -4,6 +4,8 @@ import '../pages/login_page.dart';
 import '../app_shell/home_shell.dart';
 import '../pages/story_page.dart';
 import '../pages/premium_page.dart';
+import '../pages/signup_page.dart';
+import '../pages/complete_profile_page.dart';
 import '../pages/reset_password_page.dart';
 import '../pages/forgot_email_page.dart';
 
@@ -12,6 +14,8 @@ class AppRoutes {
   static const String home = '/home';
   static const String story = '/story';
   static const String premium = '/premium';
+  static const String signup = '/signup';
+  static const String completeProfile = '/complete-profile';
   static const String resetPassword = '/reset-password';
   static const String forgotEmail = '/forgot-email';
 
@@ -25,7 +29,7 @@ class AppRoutes {
 
       case home:
         return MaterialPageRoute(
-          builder: (_) => const HomeShell(), 
+          builder: (_) => const HomeShell(),
           settings: settings,
         );
 
@@ -34,6 +38,8 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => StoryPage(
             storyId: args?['storyId'] ?? '',
+            pdfUrl: args?['pdfUrl'] ?? '',
+            title: args?['title'] ?? 'História',
           ),
           settings: settings,
         );
@@ -41,6 +47,18 @@ class AppRoutes {
       case premium:
         return MaterialPageRoute(
           builder: (_) => const PremiumPage(),
+          settings: settings,
+        );
+
+      case signup:
+        return MaterialPageRoute(
+          builder: (_) => const SignupPage(),
+          settings: settings,
+        );
+
+      case completeProfile:
+        return MaterialPageRoute(
+          builder: (_) => const CompleteProfilePage(),
           settings: settings,
         );
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../services/auth_service.dart';
 import '../core/routes.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,7 +13,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool _isObscure = true;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -31,6 +35,102 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onControllersChanged() {
     if (mounted) setState(() {});
+  }
+
+  Future<void> _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      _showError('Por favor, preencha todos os campos.');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final user = await _authService.signIn(email, password);
+      
+      if (user != null && mounted) {
+        // Verificar se o perfil está completo
+        final isProfileComplete = await _authService.isProfileComplete(user.uid);
+        
+        if (!isProfileComplete) {
+          // Redirecionar para completar perfil
+          Navigator.pushReplacementNamed(context, AppRoutes.completeProfile);
+        } else {
+          // Ir para home
+          Navigator.pushReplacementNamed(context, AppRoutes.home);
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        _showError(_getErrorMessage(e.code));
+      }
+    } catch (e) {
+      if (mounted) {
+        _showError('Erro ao fazer login. Tente novamente.');
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final user = await _authService.signInWithGoogle();
+      
+      if (user != null && mounted) {
+        // Verificar se o perfil está completo
+        final isProfileComplete = await _authService.isProfileComplete(user.uid);
+        
+        if (!isProfileComplete) {
+          Navigator.pushReplacementNamed(context, AppRoutes.completeProfile);
+        } else {
+          Navigator.pushReplacementNamed(context, AppRoutes.home);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        _showError('Erro ao fazer login com Google: ${e.toString()}');
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  String _getErrorMessage(String code) {
+    switch (code) {
+      case 'user-not-found':
+        return 'Usuário não encontrado.';
+      case 'wrong-password':
+        return 'Senha incorreta.';
+      case 'invalid-email':
+        return 'Email inválido.';
+      case 'user-disabled':
+        return 'Usuário desabilitado.';
+      case 'too-many-requests':
+        return 'Muitas tentativas. Tente novamente mais tarde.';
+      case 'invalid-credential':
+        return 'Credenciais inválidas.';
+      default:
+        return 'Erro ao fazer login. Tente novamente.';
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   @override
@@ -144,10 +244,17 @@ class _LoginPageState extends State<LoginPage> {
                             width: double.infinity,
                             height: 52,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacementNamed(context, AppRoutes.home);
-                              },
-                              child: const Text('Entrar'),
+                              onPressed: _isLoading ? null : _handleLogin,
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      ),
+                                    )
+                                  : const Text('Entrar'),
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -170,21 +277,25 @@ class _LoginPageState extends State<LoginPage> {
                                 background: Colors.white,
                                 border: Colors.grey[300]!,
                                 child: const Icon(Icons.g_mobiledata, size: 28),
-                                onTap: () {},
+                                onTap: _isLoading ? () {} : _handleGoogleSignIn,
                               ),
                               const SizedBox(width: 12),
                               _SocialIconButton(
                                 tooltip: 'Entrar com Facebook',
                                 background: const Color(0xFF1877F2),
                                 child: const Icon(Icons.facebook, color: Colors.white),
-                                onTap: () {},
+                                onTap: () {
+                                  // TODO: Implementar login com Facebook
+                                },
                               ),
                               const SizedBox(width: 12),
                               _SocialIconButton(
                                 tooltip: 'Entrar com Apple',
                                 background: Colors.black,
                                 child: const Icon(Icons.apple, color: Colors.white),
-                                onTap: () {},
+                                onTap: () {
+                                  // TODO: Implementar login com Apple
+                                },
                               ),
                             ],
                           ),
@@ -194,7 +305,9 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               Text('Ainda não tem conta?', style: TextStyle(color: Colors.grey[700])),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context, AppRoutes.signup);
+                                },
                                 child: const Text('Criar Conta'),
                               ),
                             ],
@@ -206,6 +319,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
+            if (_isLoading)
+              Container(
+                color: Colors.black.withOpacity(0.3),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
           ],
         ),
       ),
@@ -217,9 +337,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onForgotPassword() {
-  Navigator.pushNamed(context, '/reset-password', arguments: {
-    'prefillEmail': _emailController.text.trim(),
-  });
+    Navigator.pushNamed(context, AppRoutes.resetPassword, arguments: {
+      'prefillEmail': _emailController.text.trim(),
+    });
   }
 
   Widget _softCircle(double size, Color color) {
@@ -331,8 +451,7 @@ class _SocialIconButton extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: onTap,
-        child: Container
-        (
+        child: Container(
           width: 52,
           height: 52,
           decoration: BoxDecoration(

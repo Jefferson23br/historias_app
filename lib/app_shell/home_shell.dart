@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import '../features/dashboard/dashboard_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../features/categories/categories_page.dart';
 
 Future<void> _testFirestoreOnce() async {
   final db = FirebaseFirestore.instance;
   try {
     final snap = await db
-        .collection('books')
-        .limit(1)
-        .get(const GetOptions(source: Source.server));
+      .collection('books')
+      .limit(1)
+      .get(const GetOptions(source: Source.server));
     print('TEST FIRESTORE OK: docs=${snap.docs.length}');
     for (final d in snap.docs) {
       print('docId=${d.id} data=${d.data()}');
@@ -33,7 +34,7 @@ class _HomeShellState extends State<HomeShell> {
     DashboardScreen(),
     _PlaceholderScreen(title: 'Lançamentos'),
     _PlaceholderScreen(title: 'Minha Lista'),
-    _PlaceholderScreen(title: 'Categorias'),
+    CategoriesPage(),
     _PlaceholderScreen(title: 'Meu Perfil'),
   ];
 
