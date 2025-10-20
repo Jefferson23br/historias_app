@@ -19,6 +19,7 @@ class PdfViewerPage extends StatefulWidget {
 
 class _PdfViewerPageState extends State<PdfViewerPage> {
   late String currentUrl;
+  bool _isShowingTextVersion = false;
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   void _switchToImageVersion() {
     setState(() {
       currentUrl = widget.pdfUrl;
+      _isShowingTextVersion = false;
     });
   }
 
@@ -36,6 +38,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     if (widget.pdfUrl2 != null && widget.pdfUrl2!.isNotEmpty) {
       setState(() {
         currentUrl = widget.pdfUrl2!;
+        _isShowingTextVersion = true;
       });
     }
   }
@@ -54,50 +57,63 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
       ),
       body: Column(
         children: [
-          // Botões de tipo de leitura
+          // Botões de tipo de leitura com Wrap para evitar overflow
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
               children: [
                 ElevatedButton.icon(
-                  onPressed: _switchToImageVersion,
+                  onPressed: _isShowingTextVersion ? _switchToImageVersion : null,
                   icon: const Icon(Icons.picture_as_pdf_outlined),
                   label: const Text("Leitura com Imagens"),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple.shade300,
-                    foregroundColor: Colors.white,
+                    backgroundColor: !_isShowingTextVersion
+                        ? Colors.purple.shade300
+                        : Colors.grey.shade300,
+                    foregroundColor: !_isShowingTextVersion
+                        ? Colors.white
+                        : Colors.black54,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
-                ElevatedButton.icon(
-                  onPressed: hasTextVersion ? _switchToTextVersion : null,
-                  icon: const Icon(Icons.text_fields),
-                  label: const Text("Leitura em Texto"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        hasTextVersion ? Colors.pink.shade300 : Colors.grey.shade400,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                if (hasTextVersion)
+                  ElevatedButton.icon(
+                    onPressed: !_isShowingTextVersion ? _switchToTextVersion : null,
+                    icon: const Icon(Icons.text_fields),
+                    label: const Text("Leitura em Texto"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _isShowingTextVersion
+                          ? Colors.pink.shade300
+                          : Colors.grey.shade300,
+                      foregroundColor: _isShowingTextVersion
+                          ? Colors.white
+                          : Colors.black54,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
           const Divider(height: 0),
           Expanded(
-            child: PDF().cachedFromUrl(
-              currentUrl,
-              placeholder: (progress) =>
-                  Center(child: Text('$progress %', style: const TextStyle(fontSize: 18))),
-              errorWidget: (error) =>
-                  Center(child: Text('Erro ao carregar PDF: $error')),
+            child: Container(
+              key: ValueKey(currentUrl), // ← Key no Container, não no PDF
+              child: PDF().cachedFromUrl(
+                currentUrl,
+                placeholder: (progress) =>
+                    Center(child: Text('$progress %', style: const TextStyle(fontSize: 18))),
+                errorWidget: (error) =>
+                    Center(child: Text('Erro ao carregar PDF: $error')),
+              ),
             ),
           ),
         ],
