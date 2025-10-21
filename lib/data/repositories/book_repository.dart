@@ -10,69 +10,69 @@ class BookRepository {
 
   Stream<List<Book>> allBooksStream() {
     return _db.collection('books')
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-          .map((doc) => Book.fromMap(doc.id, doc.data()))
-          .toList());
+    .snapshots()
+    .map((snapshot) => snapshot.docs
+    .map((doc) => Book.fromMap(doc.id, doc.data()))
+    .toList());
   }
 
   Stream<List<Book>> top10Stream() {
     return _db.collection('books')
-      .orderBy('views15d', descending: true)
-      .limit(10)
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-          .map((doc) => Book.fromMap(doc.id, doc.data()))
-          .toList());
+    .orderBy('views15d', descending: true)
+    .limit(10)
+    .snapshots()
+    .map((snapshot) => snapshot.docs
+    .map((doc) => Book.fromMap(doc.id, doc.data()))
+    .toList());
   }
 
   Stream<List<Book>> recommendationsForUserStream(String uid) {
     final userDoc = _db.collection('users').doc(uid);
 
     return userDoc.snapshots().asyncExpand((userSnapshot) {
-      final data = userSnapshot.data();
-      if (data == null) {
-        return Stream.value(<Book>[]);
-      }
+    final data = userSnapshot.data();
+    if (data == null) {
+    return Stream.value(<Book>[]);
+    }
 
-      final favs = Map<String, dynamic>.from(data['favorites'] ?? {});
+    final favs = Map<String, dynamic>.from(data['favorites'] ?? {});
 
-      if (favs.isEmpty) {
-        return _db.collection('books')
-          .limit(10)
-          .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map((doc) => Book.fromMap(doc.id, doc.data()))
-              .toList());
-      }
+    if (favs.isEmpty) {
+    return _db.collection('books')
+    .limit(10)
+    .snapshots()
+    .map((snapshot) => snapshot.docs
+    .map((doc) => Book.fromMap(doc.id, doc.data()))
+    .toList());
+    }
 
-      String? bestCategory;
-      int bestCount = -1;
-      favs.forEach((categoryId, count) {
-        final c = (count is int) ? count : (count is num ? count.toInt() : 0);
-        if (c > bestCount) {
-          bestCategory = categoryId;
-          bestCount = c;
-        }
-      });
+    String? bestCategory;
+    int bestCount = -1;
+    favs.forEach((categoryId, count) {
+    final c = (count is int) ? count : (count is num ? count.toInt() : 0);
+    if (c > bestCount) {
+    bestCategory = categoryId;
+    bestCount = c;
+    }
+    });
 
-      if (bestCategory == null) {
-        return _db.collection('books')
-          .limit(10)
-          .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map((doc) => Book.fromMap(doc.id, doc.data()))
-              .toList());
-      }
+    if (bestCategory == null) {
+    return _db.collection('books')
+    .limit(10)
+    .snapshots()
+    .map((snapshot) => snapshot.docs
+    .map((doc) => Book.fromMap(doc.id, doc.data()))
+    .toList());
+    }
 
-      return _db.collection('books')
-        .where('categoryId', isEqualTo: bestCategory)
-        .orderBy('views15d', descending: true)
-        .limit(20)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Book.fromMap(doc.id, doc.data()))
-            .toList());
+    return _db.collection('books')
+    .where('categoryId', isEqualTo: bestCategory)
+    .orderBy('views15d', descending: true)
+    .limit(20)
+    .snapshots()
+    .map((snapshot) => snapshot.docs
+    .map((doc) => Book.fromMap(doc.id, doc.data()))
+    .toList());
     });
   }
 
@@ -91,10 +91,26 @@ class BookRepository {
 
   Stream<List<Book>> booksByCategoryStream(String categoryId) {
     return _db.collection('books')
-      .where('categoryId', isEqualTo: categoryId)
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-        .map((doc) => Book.fromMap(doc.id, doc.data()))
-        .toList());
+    .where('categoryId', isEqualTo: categoryId)
+    .snapshots()
+    .map((snapshot) => snapshot.docs
+    .map((doc) => Book.fromMap(doc.id, doc.data()))
+    .toList());
+  }
+
+  /// Stream de livros lançados nos últimos 30 dias, ordenados por data de lançamento (mais recente primeiro)
+  Stream<List<Book>> recentReleasesStream() {
+    final now = DateTime.now();
+    final thirtyDaysAgo = now.subtract(const Duration(days: 30));
+    
+    return _db
+        .collection('books')
+        .where('datelaunch', isGreaterThanOrEqualTo: Timestamp.fromDate(thirtyDaysAgo))
+        .where('datelaunch', isLessThanOrEqualTo: Timestamp.fromDate(now))
+        .orderBy('datelaunch', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Book.fromMap(doc.id, doc.data()))
+            .toList());
   }
 }
