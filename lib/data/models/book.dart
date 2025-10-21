@@ -6,7 +6,8 @@ class Book {
   final int views15d;
   final bool isPremium;
   final String pdfUrl;
-  final String pdfUrl2; // novo campo
+  final String pdfUrl2;
+  final DateTime? datelaunch; // novo campo
 
   Book({
     required this.id,
@@ -16,7 +17,8 @@ class Book {
     required this.views15d,
     required this.isPremium,
     required this.pdfUrl,
-    required this.pdfUrl2, // adicionado
+    required this.pdfUrl2,
+    this.datelaunch,
   });
 
   factory Book.fromMap(String id, Map<String, dynamic> m) {
@@ -33,6 +35,18 @@ class Book {
       return 0;
     }
 
+    DateTime? parseDateTime(dynamic val) {
+      if (val == null) return null;
+      if (val is DateTime) return val;
+      if (val is String) return DateTime.tryParse(val);
+      // Se for Timestamp do Firestore
+      try {
+        return (val as dynamic).toDate();
+      } catch (_) {
+        return null;
+      }
+    }
+
     return Book(
       id: id,
       title: (m['title'] ?? '') as String,
@@ -41,7 +55,8 @@ class Book {
       views15d: parseInt(m['views15d']),
       isPremium: parseBool(m['isPremium']),
       pdfUrl: (m['pdfUrl'] ?? '') as String,
-      pdfUrl2: (m['pdfUrl2'] ?? '') as String, // leitura em texto
+      pdfUrl2: (m['pdfUrl2'] ?? '') as String,
+      datelaunch: parseDateTime(m['datelaunch']),
     );
   }
 }
