@@ -1,8 +1,17 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services")
+}
+
+val keyPropertiesFile = rootProject.file("key.properties")
+val keyProperties = Properties()
+if (keyPropertiesFile.exists()) {
+    keyProperties.load(FileInputStream(keyPropertiesFile))
 }
 
 android {
@@ -27,8 +36,38 @@ android {
         multiDexEnabled = true
     }
 
+    signingConfigs {
+        create("release") {
+            if (keyPropertiesFile.exists()) {
+                val alias = keyProperties.getProperty("keyAlias")
+                val keyPass = keyProperties.getProperty("keyPassword")
+                val storePass = keyProperties.getProperty("storePassword")
+                val storeFileName = keyProperties.getProperty("storeFile")
+
+                keyAlias = alias
+                keyPassword = keyPass
+                storePassword = storePass
+
+                // .jks localizado em android/app e key.properties contém apenas o nome do arquivo
+                storeFile = file(storeFileName)
+
+                // Se você preferir caminho absoluto no key.properties, use esta versão:
+                // storeFile = file(keyProperties.getProperty("storeFile"))
+            }
+        }
+    }
+
     buildTypes {
-        release {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        getByName("debug") {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
