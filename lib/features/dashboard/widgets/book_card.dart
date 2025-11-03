@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../data/models/book.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../widgets/favorite_button.dart';
 
 class BookCard extends StatelessWidget {
   final Book book;
@@ -29,6 +30,18 @@ class BookCard extends StatelessWidget {
                       height: double.infinity,
                       placeholder: (_, __) => Container(color: Colors.grey.shade300),
                       errorWidget: (_, __, ___) => Container(color: Colors.grey.shade300),
+                    ),
+                  ),
+                  // Botão de favorito no canto superior direito
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: FavoriteButton(bookId: book.id, size: 20),
                     ),
                   ),
                   // Badge Premium/Gratuito no canto inferior direito
