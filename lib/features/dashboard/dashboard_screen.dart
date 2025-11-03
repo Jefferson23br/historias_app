@@ -20,6 +20,7 @@ class DashboardScreen extends StatelessWidget {
         builder: (_) => PdfViewerPage(
           pdfUrl: book.pdfUrl,
           title: book.title,
+          bookId: book.id,
           pdfUrl2: book.pdfUrl2,
         ),
       ),
