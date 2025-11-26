@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+match /databases/{database}/documents {
+
+function isAuthed() { return request.auth != null; }
+
+// Livros: leitura pública (ou restrita se preferir), escrita bloqueada no app
+match /books/{bookId} {
+  allow read: if true;     // ou isAuthed()
+  allow write: if false;   // escrita por admin/Cloud Functions
+}
+
+// Categorias: leitura pública
+match /categories/{categoryId} {
+  allow read: if true;
+  allow write: if false;
+}
+
+// Perfil do usuário: somente o próprio usuário
+match /users/{uid} {
+  allow read, update: if isAuthed() && request.auth.uid == uid;
+  allow create: if isAuthed() && request.auth.uid == uid;
+  allow delete: if false;
+}
+
+// Se for usar contadores/eventos depois, adicionamos aqui os matches.
+}
+}
+
+
+rules_version = '2';
+service firebase.storage {
+match /b/{bucket}/o {
+
+// Capas dos livros: leitura pública (melhor para CDN/latência); escrita bloqueada para MVP
+match /covers/{allPaths=**} {
+  allow read: if true;
+  allow write: if false;
+}
+
+// Ícones de categorias: leitura pública; escrita bloqueada
+match /category_icons/{allPaths=**} {
+  allow read: if true;
+  allow write: if false;
+}
+
+// Bloquear demais caminhos
+match /{path=**} {
+  allow read, write: if false;
+}
+}
+}
